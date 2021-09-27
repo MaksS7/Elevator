@@ -31,6 +31,10 @@ public:
 
 private slots:
 
+signals:
+    void arrivedOnTheFloor(int floor);
+    void theElevatorHasLeft(bool direction);
+
 private:
     QVector<QPushButton*> buttonVector;
     QVector<QRectF> floorPosition;
@@ -43,6 +47,13 @@ private:
     QRectF currentPosition;
     QRectF nextPosition;
     cabine *cab;
+
+    enum directionElevator {
+        DOWN,
+        UP
+    };
+    Q_ENUM(directionElevator)
+
 
     void addFloor(int count);
 

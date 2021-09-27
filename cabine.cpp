@@ -5,7 +5,7 @@
 cabine::cabine(QObject *parent) :
     QObject(parent)
 {
-    rectangle = QRectF(0, 0, cabineWidth, cabineHeight);
+    rectangle = QRectF(10, 10, cabineWidth, cabineHeight);
 }
 
 cabine::cabine(const QRectF &rect, QObject *parent) :

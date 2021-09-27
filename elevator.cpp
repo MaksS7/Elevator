@@ -4,11 +4,11 @@
 
 Elevator::Elevator(QWidget *parent)
     : QMainWindow(parent)
-    , duration(2000)
-    , heightCabine(10)
-    , widthCabine(10)
+    , duration(1000)
+    , heightCabine(30)
+    , widthCabine(30)
     , floorCount(5)
-    , startPosition(10, 10, widthCabine, heightCabine)
+    , startPosition(30, 30, widthCabine, heightCabine)
     , currentPosition(startPosition)
     , cab(nullptr)
     , ui(new Ui::Elevator)
@@ -17,8 +17,9 @@ Elevator::Elevator(QWidget *parent)
     ui->spinBoxFloorCount->setValue(5);
     //TODO: Добавить генерацию сцены от количесвта этажей
     //TODO: Добавить автоматическую генерацию кнопок по этажам
-    //TODO: Добавить текущее положение лифта
     //TODO: Добавить индикацию движения лифта
+    //TODO: Добавить очередь запросов лифта
+
     cab = new cabine(startPosition);
 
     ui->graphicsView->setSceneRect(QRectF(0,0, 100, 300));
@@ -31,7 +32,11 @@ Elevator::Elevator(QWidget *parent)
     connect(ui->btnReset, &QPushButton::clicked, this, &Elevator::resetPosition);
     connect(ui->spinBoxFloorCount, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &Elevator::setFloorCount);
-    connect(animation, &QPropertyAnimation::finished, [this] (){currentPosition = nextPosition;});
+    connect(animation, &QPropertyAnimation::finished,
+            [this] (){currentPosition = nextPosition;
+                    scene->update();
+                    emit arrivedOnTheFloor(floorPosition.indexOf(currentPosition)); //TODO: Открытие дверей по сигналу
+    });
 
     addFloor(floorCount);
 }
@@ -49,10 +54,14 @@ Elevator::~Elevator()
 
 void Elevator::startAnimation()
 {
-    animation->setDuration(duration);
+    int tempCurentfloor = floorPosition.indexOf(currentPosition);
+    int tempNextFloor = floorPosition.indexOf(nextPosition);
+    int tempDuration = duration * qAbs(tempNextFloor - tempCurentfloor);
+    animation->setDuration(tempDuration);
 //    animation->setStartValue(startPosition);
     animation->setEndValue(nextPosition);
     animation->start();
+    emit theElevatorHasLeft(tempCurentfloor > tempNextFloor ? DOWN : UP); //TODO: выводить напревление движения
 }
 
 void Elevator::resetPosition()
@@ -95,7 +104,7 @@ void Elevator::addFloor(int count)
 //        } else {
 
             QRectF tempRect = startPosition;
-            tempRect.moveTop(heightCabine * (3 * (i))); //TODO: изменение меж этажного расстояния
+            tempRect.moveTop(heightCabine * (3 * (i)) + heightCabine); //TODO: изменение меж этажного расстояния
             floorPosition.push_back(tempRect);
             connect(btn, QOverload<bool>::of(&QPushButton::clicked),
                     [=] (bool checked) {setNextPosition(floorPosition[i]);});
