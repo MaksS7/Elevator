@@ -10,11 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     cabine.cpp \
+    door.cpp \
     main.cpp \
     elevator.cpp
 
 HEADERS += \
     cabine.h \
+    door.h \
     elevator.h
 
 FORMS += \

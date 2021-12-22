@@ -8,6 +8,10 @@
 #include <QPropertyAnimation>
 #include <QVector>
 #include <QPushButton>
+#include <door.h>
+#include <QDebug>
+#include <QTimer>
+#include <QGraphicsItemGroup>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Elevator; }
@@ -29,7 +33,14 @@ public:
     void setFloorCount(int8_t count);
     int8_t getFloorCount() const;
 
+    enum directionElevator {
+        DOWN,
+        UP
+    };
+    Q_ENUM(directionElevator)
+
 private slots:
+    void update();
 
 signals:
     void arrivedOnTheFloor(int floor);
@@ -47,16 +58,11 @@ private:
     QRectF currentPosition;
     QRectF nextPosition;
     cabine *cab;
-
-    enum directionElevator {
-        DOWN,
-        UP
-    };
-    Q_ENUM(directionElevator)
-
+    door *doorOnTheFloor;
+    QVector<door*> doorOnTheFloorVectro;
+    QTimer *timer;
 
     void addFloor(int count);
-
 
     Ui::Elevator *ui;
 };

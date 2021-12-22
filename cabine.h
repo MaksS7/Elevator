@@ -4,6 +4,7 @@
 #include <QGraphicsItem>
 #include <QRectF>
 #include <QPainter>
+#include <QStyledItemDelegate>
 
 class cabine : public QObject, public QGraphicsItem
 {

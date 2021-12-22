@@ -1,4 +1,6 @@
 #include "cabine.h"
+#include <QPen>
+#include <QDebug>
 
 //TODO: добавить открытие дверей
 //TODO: добавить сигнла об открытии
@@ -23,7 +25,7 @@ QRectF cabine::geometry() const
 void cabine::setGeometry(const QRectF &rect)
 {
     if (rect != rectangle) {
-        rectangle = rect;
+        rectangle.moveTo(rect.x(), rect.y());
         update();
     }
 }
@@ -37,7 +39,9 @@ void cabine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
-//    painter->setBrush(QColor(Qt::black));
+//    QPen pen;
+//    pen.setWidth(3);
+//    painter->setPen(pen);
     painter->drawRect(rectangle);
 }
 
